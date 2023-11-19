@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { auth, signInWithGoogleRedirect, createUserDocumentFromAuth, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
+import { signInWithGoogleRedirect, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
 import './sign-in-form.styles.scss'
-import { useEffect } from 'react'
-import { getRedirectResult } from 'firebase/auth'
 
 const defaultFormFields = {
   email: '',
@@ -12,18 +10,6 @@ const defaultFormFields = {
 }
 
 const SignInForm = () => {
-  // get user after redirect
-  useEffect(() => {
-    async function effect() {
-      const response = await getRedirectResult(auth)
-      if (response) {
-        await createUserDocumentFromAuth(response.user)
-      }
-    }
-
-    effect()
-  }, [])
-
   const [formFields, setFormFields] = useState(defaultFormFields)
   const { email, password } = formFields
 
@@ -40,8 +26,7 @@ const SignInForm = () => {
     event.preventDefault()
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(email, password)
-      await createUserDocumentFromAuth(response.user)
+      await signInAuthUserWithEmailAndPassword(email, password)
       resetFormFields()
     } catch (error) {
       switch (error.code) {
