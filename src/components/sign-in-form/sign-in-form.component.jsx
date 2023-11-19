@@ -12,12 +12,12 @@ const defaultFormFields = {
 }
 
 const SignInForm = () => {
+  // get user after redirect
   useEffect(() => {
     async function effect() {
       const response = await getRedirectResult(auth)
       if (response) {
-        const userDocRef = await createUserDocumentFromAuth(response.user)
-        console.log(userDocRef)
+        await createUserDocumentFromAuth(response.user)
       }
     }
 
@@ -41,7 +41,7 @@ const SignInForm = () => {
 
     try {
       const response = await signInAuthUserWithEmailAndPassword(email, password)
-      console.log(response)
+      await createUserDocumentFromAuth(response.user)
       resetFormFields()
     } catch (error) {
       switch (error.code) {
